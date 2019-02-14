@@ -8,9 +8,10 @@
 
 import UIKit
 import RealmSwift
+import SwipeCellKit
 
 
-class TodoListViewController: UITableViewController {
+class TodoListViewController: SwipeTableViewController {
     
     var todoItems : Results<Item>?
     let realm = try! Realm()
@@ -31,23 +32,42 @@ class TodoListViewController: UITableViewController {
         print(dataFilePath)
         
     }
+    
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell" , for: indexPath)
+        
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
+        
         
         if let item = todoItems?[indexPath.row] {
             cell.textLabel?.text = item.title
-            
+
             cell.accessoryType = item.done ? .checkmark : .none
-            
-            
+
         } else {
             cell.textLabel?.text = "No items added"
         }
         
-       
         
         return cell
+        
+        
+        
+//        let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell" , for: indexPath)
+//
+//        if let item = todoItems?[indexPath.row] {
+//            cell.textLabel?.text = item.title
+//
+//            cell.accessoryType = item.done ? .checkmark : .none
+//
+//
+//        } else {
+//            cell.textLabel?.text = "No items added"
+//        }
+//
+//
+//
+//        return cell
         
     }
     
@@ -129,6 +149,20 @@ class TodoListViewController: UITableViewController {
 
     }
     
+    override func updateModel(at indexPath: IndexPath) {
+        
+        if let itemForDeletion = self.todoItems?[indexPath.row] {
+            do{
+                try self.realm.write {
+                    self.realm.delete(itemForDeletion)
+                }
+            }catch{
+                print("Error deleting category \(error)")
+            }
+        }
+        
+    }
+    
   
 }
 
@@ -154,4 +188,5 @@ extension TodoListViewController: UISearchBarDelegate{
     }
 
 }
+
 
