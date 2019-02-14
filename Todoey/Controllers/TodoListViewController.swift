@@ -23,8 +23,6 @@ class TodoListViewController: UITableViewController {
 
     let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
     
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
-
 
     override func viewDidLoad() {
         super.viewDidLoad()
